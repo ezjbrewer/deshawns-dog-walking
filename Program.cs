@@ -1,4 +1,5 @@
 using deshawnsdogwalking.Models;
+using deshawnsdogwalking.Models.DTOs;
 
 List<WalkerCity> walkerCities = new List<WalkerCity>
 {
@@ -60,5 +61,24 @@ app.MapGet("/api/hello", () =>
     return new { Message = "Welcome to DeShawn's Dog Walking" };
 });
 
+// Endpoints below this line
+
+app.MapGet("/api/dogs", () => {
+    foreach (Dogs dog in dogs)
+    {
+        dog.Walker = walkers.FirstOrDefault(w => w.Id == dog.WalkerId);
+        dog.City = cities.FirstOrDefault(c => c.Id == dog.CityId);
+    }
+
+    return dogs.Select(d => new DogsDTO
+    {
+        Id = d.Id,
+        Name = d.Name,
+        WalkerId = d.WalkerId,
+        Walker = d.Walker,
+        CityId = d.CityId,
+        City = d.City
+    }).ToList();
+});
 
 app.Run();
