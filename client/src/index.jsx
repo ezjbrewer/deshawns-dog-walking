@@ -5,6 +5,8 @@ import App from "./App";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import Home from "./Home";
+import { DogDetails } from "./DogDetails.jsx";
+import { AddDog } from "./AddDog.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -12,6 +14,8 @@ root.render(
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
+        <Route path=":dogId" element={<DogDetails />} />
+        <Route path="/add-dog" element={<AddDog />} />
       </Route>
     </Routes>
   </BrowserRouter>,
