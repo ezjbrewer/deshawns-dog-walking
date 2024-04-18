@@ -34,11 +34,8 @@ export const AddDog = () => {
         event.preventDefault()
         dog.Name = dogName
         dog.CityId = cityId
-        postNewDog(dog).then(() => {
-            getDogs().then((dogArr) => {
-                dogId = dogArr.length
-                navigate(`/${dogId}`)
-            })
+        postNewDog(dog).then((dogObj) => {
+            navigate(`/${dogObj.id}`)
         })
     }
     
