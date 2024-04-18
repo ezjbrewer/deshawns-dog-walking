@@ -16,5 +16,5 @@ export const postNewDog = async (dog) => {
             "Content-Type": "application/json", 
         },
         body: JSON.stringify(dog)
-    })
+    }).then((res) => res.json())
 }

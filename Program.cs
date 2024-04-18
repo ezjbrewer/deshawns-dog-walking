@@ -10,31 +10,31 @@ List<WalkerCity> walkerCities = new List<WalkerCity>
     new WalkerCity { Id = 2, WalkerId = 2, CityId = 2 }
 };
 
-List<Cities> cities = new List<Cities>
+List<City> cities = new List<City>
 {
-    new Cities { Id = 1, Name = "Inverness" },
-    new Cities { Id = 2, Name = "Stornoway" },
-    new Cities { Id = 3, Name = "Kirkwall" },
-    new Cities { Id = 4, Name = "Lerwick" },
-    new Cities { Id = 5, Name = "Thurso" }
+    new City { Id = 1, Name = "Inverness" },
+    new City { Id = 2, Name = "Stornoway" },
+    new City { Id = 3, Name = "Kirkwall" },
+    new City { Id = 4, Name = "Lerwick" },
+    new City { Id = 5, Name = "Thurso" }
 };
 
-List<Walkers> walkers = new List<Walkers>
+List<Walker> walkers = new List<Walker>
 {
-    new Walkers { Id = 3, Name = "Nikolai" },
-    new Walkers { Id = 5, Name = "Anastasia" },
-    new Walkers { Id = 4, Name = "Svetlana" },
-    new Walkers { Id = 1, Name = "Vladimir" },
-    new Walkers { Id = 2, Name = "Yuri" }
+    new Walker { Id = 3, Name = "Nikolai" },
+    new Walker { Id = 5, Name = "Anastasia" },
+    new Walker { Id = 4, Name = "Svetlana" },
+    new Walker { Id = 1, Name = "Vladimir" },
+    new Walker { Id = 2, Name = "Yuri" }
 };
 
-List<Dogs> dogs = new List<Dogs>
+List<Dog> dogs = new List<Dog>
 {
-    new Dogs { Id = 4, Name = "Nikita", CityId = 4, WalkerId = 4 },
-    new Dogs { Id = 1, Name = "Boris", CityId = 1, WalkerId = 1 },
-    new Dogs { Id = 3, Name = "Sasha", CityId = 3, WalkerId = 3 },
-    new Dogs { Id = 5, Name = "Dmitri", CityId = 5, WalkerId = 5 },
-    new Dogs { Id = 2, Name = "Ivan", CityId = 2, WalkerId = 2 }
+    new Dog { Id = 4, Name = "Nikita", CityId = 4, WalkerId = 4 },
+    new Dog { Id = 1, Name = "Boris", CityId = 1, WalkerId = 1 },
+    new Dog { Id = 3, Name = "Sasha", CityId = 3, WalkerId = 3 },
+    new Dog { Id = 5, Name = "Dmitri", CityId = 5, WalkerId = 5 },
+    new Dog { Id = 2, Name = "Ivan", CityId = 2, WalkerId = 2 }
 };
 
 
@@ -64,13 +64,13 @@ app.MapGet("/api/hello", () =>
 // Endpoints below this line
 
 app.MapGet("/api/dogs", () => {
-    foreach (Dogs dog in dogs)
+    foreach (Dog dog in dogs)
     {
         dog.Walker = walkers.FirstOrDefault(w => w.Id == dog.WalkerId);
         dog.City = cities.FirstOrDefault(c => c.Id == dog.CityId);
     }
 
-    return dogs.Select(d => new DogsDTO
+    return dogs.Select(d => new DogDTO
     {
         Id = d.Id,
         Name = d.Name,
@@ -83,7 +83,7 @@ app.MapGet("/api/dogs", () => {
 
 app.MapGet("/api/cities", () =>
 {
-    return cities.Select(c => new CitiesDTO
+    return cities.Select(c => new CityDTO
     {
         Id = c.Id,
         Name = c.Name
@@ -92,30 +92,30 @@ app.MapGet("/api/cities", () =>
 
 app.MapGet("/api/dogs/{id}", (int id) =>
 {
-    Dogs dog = dogs.FirstOrDefault(d => d.Id == id);
+    Dog dog = dogs.FirstOrDefault(d => d.Id == id);
 
-    Walkers walker = walkers.FirstOrDefault(w => w.Id == dog.WalkerId);
-    Cities city = cities.FirstOrDefault(c => c.Id == dog.CityId);
+    Walker walker = walkers.FirstOrDefault(w => w.Id == dog.WalkerId);
+    City city = cities.FirstOrDefault(c => c.Id == dog.CityId);
     
-    return new DogsDTO
+    return new DogDTO
     {
         Id = dog.Id,
         Name = dog.Name,
         WalkerId = dog.WalkerId,
-        Walker = walker == null ? new Walkers { Id = 0, Name = "Unassigned" } : walker,
+        Walker = walker == null ? new Walker { Id = 0, Name = "Unassigned" } : walker,
         CityId = dog.CityId,
         City = dog.City
     };
 });
 
-app.MapPost("/api/dogs", (Dogs dog) =>
+app.MapPost("/api/dogs", (Dog dog) =>
 {
     dog.City = cities.FirstOrDefault(c => c.Id == dog.CityId);
 
     dog.Id = dogs.Max(d => d.Id) + 1;
     dogs.Add(dog);
 
-    return Results.Created($"/dogs/{dog.Id}", new DogsDTO
+    return Results.Created($"/dogs/{dog.Id}", new DogDTO
     {
         Id = dog.Id,
         Name = dog.Name,
