@@ -7,7 +7,8 @@ List<WalkerCity> walkerCities = new List<WalkerCity>
     new WalkerCity { Id = 5, WalkerId = 5, CityId = 5 },
     new WalkerCity { Id = 4, WalkerId = 4, CityId = 4 },
     new WalkerCity { Id = 1, WalkerId = 1, CityId = 1 },
-    new WalkerCity { Id = 2, WalkerId = 2, CityId = 2 }
+    new WalkerCity { Id = 2, WalkerId = 2, CityId = 2 },
+    new WalkerCity { Id = 6, WalkerId = 1, CityId = 2}
 };
 
 List<City> cities = new List<City>
@@ -88,6 +89,36 @@ app.MapGet("/api/cities", () =>
         Id = c.Id,
         Name = c.Name
     });
+});
+
+app.MapGet("/api/walkers/test", () =>
+{
+    return walkers.Select(w => new WalkerDTO
+    {
+        Id = w.Id,
+        Name = w.Name
+    });
+});
+// List<Dog> dogs = new List<Dog>
+app.MapGet("/api/walkers", () =>
+{
+    List<WalkerDTO> filteredWalkers = new List<WalkerDTO>();
+    foreach (Walker walker in walkers)
+    {
+        List<WalkerCity> walkerCitiesForWalker = walkerCities.Where(wc => wc.WalkerId == walker.Id).ToList();
+        filteredWalkers.Add(new WalkerDTO
+        {
+            Id = walker.Id,
+            Name = walker.Name,
+            WalkerCities = walkerCitiesForWalker.Select(wc => new WalkerCityDTO
+            {
+                Id = wc.Id,
+                CityId = wc.CityId,
+                WalkerId = wc.WalkerId
+            }).ToList()
+        });
+    }
+    return filteredWalkers;
 });
 
 app.MapGet("/api/dogs/{id}", (int id) =>
