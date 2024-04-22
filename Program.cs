@@ -35,7 +35,11 @@ List<Dog> dogs = new List<Dog>
     new Dog { Id = 1, Name = "Boris", CityId = 1, WalkerId = 1 },
     new Dog { Id = 3, Name = "Sasha", CityId = 3, WalkerId = 3 },
     new Dog { Id = 5, Name = "Dmitri", CityId = 5, WalkerId = 5 },
-    new Dog { Id = 2, Name = "Ivan", CityId = 2, WalkerId = 2 }
+    new Dog { Id = 2, Name = "Ivan", CityId = 2, WalkerId = 2 },
+    new Dog { Id = 6, Name = "Booshka", CityId = 1, WalkerId = 0 },
+    new Dog { Id = 7, Name = "Rasputin", CityId = 2, WalkerId = 0 },
+    new Dog { Id = 8, Name = "Nicolas", CityId = 3, WalkerId = 0 },
+    new Dog { Id = 9, Name = "Czar", CityId = 4, WalkerId = 0 }
 };
 
 
@@ -153,6 +157,14 @@ app.MapPost("/api/dogs", (Dog dog) =>
         CityId = dog.CityId,
         City = dog.City
     });
+});
+
+app.MapPut("/api/dogs/walker", (Dog dog) =>
+{
+    Dog currentDog = dogs.FirstOrDefault(d => d.Id == dog.Id);
+    currentDog.WalkerId = dog.WalkerId;
+
+    return Results.Ok();
 });
 
 app.Run();
