@@ -18,3 +18,20 @@ export const postNewDog = async (dog) => {
         body: JSON.stringify(dog)
     }).then((res) => res.json())
 }
+
+export const assignWalker = async (dog, walkerId) => {
+    const updatedDog = {
+        id: dog.id,
+        name: dog.name,
+        walkerId: walkerId,
+        cityId: dog.cityId
+    }
+
+    return await fetch("/api/dogs/walker", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json", 
+        },
+        body: JSON.stringify(updatedDog)
+    })
+}

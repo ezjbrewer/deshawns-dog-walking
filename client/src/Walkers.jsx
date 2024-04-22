@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { getWalkers } from "./Services/WalkerSerice.jsx"
 import { getCities } from "./Services/CityService.jsx"
+import { WalkersDogDropdown } from "./WalkersDogDropdown.jsx"
 
 export const Walkers = () => {
     const [walkers, setWalkers] = useState([])
@@ -10,6 +11,7 @@ export const Walkers = () => {
 
     useEffect(() => {
         getWalkers().then(setWalkers)
+        getWalkers().then(setFilteredWalkers)
         getCities().then(setCities)
     }, [])
 
@@ -45,6 +47,7 @@ export const Walkers = () => {
                     return(
                         <div className="walker-card" key={walker?.id}>
                             <div>{walker?.name}</div>
+                            <WalkersDogDropdown walker={walker} />
                         </div>
                     )
                 })}
