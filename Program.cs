@@ -159,6 +159,17 @@ app.MapPost("/api/dogs", (Dog dog) =>
     });
 });
 
+app.MapPost("/api/cities", (City city) => {
+    city.Id = cities.Max(c => c.Id) + 1;
+    cities.Add(city);
+
+    return Results.Created($"/cities/{city.Id}", new CityDTO
+    {
+        Id = city.Id,
+        Name = city.Name
+    });
+});
+
 app.MapPut("/api/dogs/walker", (Dog dog) =>
 {
     Dog currentDog = dogs.FirstOrDefault(d => d.Id == dog.Id);
