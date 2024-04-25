@@ -49,6 +49,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -57,6 +58,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors(options =>
+                {
+                    options.AllowAnyOrigin();
+                    options.AllowAnyMethod();
+                    options.AllowAnyHeader();
+                });
 }
 
 app.UseHttpsRedirection();
@@ -125,6 +132,23 @@ app.MapGet("/api/walkers", () =>
     return filteredWalkers;
 });
 
+app.Map("/api/walkers/{id}", (int id) =>
+{
+    Walker walker = walkers.FirstOrDefault(w => w.Id == id);
+    List<WalkerCity> walkerCitiesForWalker = walkerCities.Where(wc => wc.WalkerId == walker.Id).ToList();
+    return new WalkerDTO
+    {
+        Id = walker.Id,
+        Name = walker.Name,
+        WalkerCities = walkerCitiesForWalker.Select(wc => new WalkerCityDTO
+        {
+            Id = wc.Id,
+            CityId = wc.CityId,
+            WalkerId = wc.WalkerId
+        }).ToList()
+    };
+});
+
 app.MapGet("/api/dogs/{id}", (int id) =>
 {
     Dog dog = dogs.FirstOrDefault(d => d.Id == id);
@@ -157,6 +181,25 @@ app.MapPost("/api/dogs", (Dog dog) =>
         CityId = dog.CityId,
         City = dog.City
     });
+});
+
+app.MapPost("/api/walkerCities", (WalkerCity walkerCity) =>
+{ 
+    walkerCity.Id = walkerCities.Max(wc => wc.Id) + 1;
+    walkerCities.Add(walkerCity);
+
+    return Results.Created($"/walkerCities/{walkerCity.Id}", new WalkerCityDTO
+    {
+        Id = walkerCity.Id,
+        CityId = walkerCity.CityId,
+        WalkerId = walkerCity.WalkerId
+    });
+});
+
+app.MapDelete("/api/walkerCities", (int? cityId, int? walkerId) =>
+{
+    WalkerCity walkerCity = walkerCities.FirstOrDefault(cw => cw.WalkerId == walkerId && cw.CityId == cityId);
+    walkerCities.Remove(walkerCity);
 });
 
 app.MapPost("/api/cities", (City city) => {

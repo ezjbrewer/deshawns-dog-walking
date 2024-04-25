@@ -48,3 +48,8 @@
   width: 30%;
   margin: 10px auto;
 }
+
+.checks {
+  display: flex;
+  flex-direction: column;
+}
