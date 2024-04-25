@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { getWalkers } from "./Services/WalkerSerice.jsx"
 import { getCities } from "./Services/CityService.jsx"
 import { WalkersDogDropdown } from "./WalkersDogDropdown.jsx"
+import { Link } from "react-router-dom"
 
 export const Walkers = () => {
     const [walkers, setWalkers] = useState([])
@@ -46,7 +47,7 @@ export const Walkers = () => {
                 {filteredWalkers.map((walker) => {
                     return(
                         <div className="walker-card" key={walker?.id}>
-                            <div>{walker?.name}</div>
+                            <div><Link key={walker?.id} to={`/walkers/${walker?.id}`}>{walker?.name}</Link></div>
                             <WalkersDogDropdown walker={walker} />
                         </div>
                     )
