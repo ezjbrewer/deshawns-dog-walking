@@ -35,3 +35,12 @@ export const assignWalker = async (dog, walkerId) => {
         body: JSON.stringify(updatedDog)
     })
 }
+
+export const deleteDog = async (dogId) => {
+    const res = await fetch(`/api/dogs/${dogId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+}

@@ -1,4 +1,4 @@
-import { getDogs } from "./Services/DogService.jsx";
+import { getDogs, deleteDog } from "./Services/DogService.jsx";
 import { getGreeting } from "./apiManager";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -23,6 +23,12 @@ export default function Home() {
     getDogs().then(setDogs)
   }, [])
 
+  const handleDogDeletion = (dogId) => {
+    deleteDog(dogId).then(() => {
+      getDogs().then(setDogs)
+    })
+  }
+
   return (
     <div>
       <p>{greeting.message}</p>
@@ -32,6 +38,7 @@ export default function Home() {
           <div className="dog-card" key={dog.id}>
             <p>Name: <Link key={dog.id} to={`/${dog.id}`}>{dog?.name}</Link></p>
             <p>City: {dog?.city?.name}</p>
+            <button onClick={() => {handleDogDeletion(dog.id)}}>Remove</button>
           </div>
         )
       })}
