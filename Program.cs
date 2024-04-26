@@ -208,6 +208,12 @@ app.MapDelete("/api/dogs/{dogId}", (int dogId) =>
     dogs.Remove(dogObj);
 });
 
+app.MapDelete("/api/walkers/{walkerId}", (int walkerId) =>
+{
+    Walker walkerObj = walkers.FirstOrDefault(w => w.Id == walkerId);
+    List<Dog> walkersDogs = dogs.Where(d => d.WalkerId == walkerObj.Id).ToList();
+});
+
 app.MapPost("/api/cities", (City city) => {
     city.Id = cities.Max(c => c.Id) + 1;
     cities.Add(city);
