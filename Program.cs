@@ -211,7 +211,19 @@ app.MapDelete("/api/dogs/{dogId}", (int dogId) =>
 app.MapDelete("/api/walkers/{walkerId}", (int walkerId) =>
 {
     Walker walkerObj = walkers.FirstOrDefault(w => w.Id == walkerId);
-    List<Dog> walkersDogs = dogs.Where(d => d.WalkerId == walkerObj.Id).ToList();
+    foreach (Dog dog in dogs)
+    {
+        if (dog.WalkerId == walkerId)
+        {
+            dog.WalkerId = 0;
+            dog.Walker = new Walker
+            {
+                Id = 0,
+                Name = "Unassigned"
+            };
+        }
+    }
+    walkers.Remove(walkerObj);
 });
 
 app.MapPost("/api/cities", (City city) => {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getWalkers } from "./Services/WalkerSerice.jsx"
+import { getWalkers, deleteWalker } from "./Services/WalkerSerice.jsx"
 import { getCities } from "./Services/CityService.jsx"
 import { WalkersDogDropdown } from "./WalkersDogDropdown.jsx"
 import { Link } from "react-router-dom"
@@ -28,6 +28,13 @@ export const Walkers = () => {
     const handleCityFilter = (event) => {
         setCityId(parseInt(event.target.value))
     }
+
+    const handleWalkerDelete = (walkerId) => {
+        deleteWalker(walkerId).then(() => {
+            getWalkers().then(setWalkers)
+            getWalkers().then(setFilteredWalkers)
+        })
+    }
     
     return(
         <div>
@@ -48,7 +55,10 @@ export const Walkers = () => {
                     return(
                         <div className="walker-card" key={walker?.id}>
                             <div><Link key={walker?.id} to={`/walkers/${walker?.id}`}>{walker?.name}</Link></div>
-                            <WalkersDogDropdown walker={walker} />
+                            <div>
+                                <WalkersDogDropdown walker={walker} />
+                                <button onClick={() => {handleWalkerDelete(walker.id)}}>Remove Walker</button>
+                            </div>
                         </div>
                     )
                 })}
