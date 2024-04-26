@@ -16,7 +16,7 @@ export const WalkerCity = () => {
     }}, [walkerId, walker])
 
     const handleDeleteWalkerCity = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         deleteWalkerCity(e.target.value, walker.id).then(() => {
             getWalkerById(walkerId).then(setWalker)
                 getCities().then(setCities)
@@ -24,7 +24,7 @@ export const WalkerCity = () => {
     }
 
     const handlePostWalkerCity = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         postWalkerCity(e.target.value, walker.id).then(() => {
             getWalkerById(walkerId).then(setWalker)
                 getCities().then(setCities)
@@ -32,21 +32,34 @@ export const WalkerCity = () => {
     }
 
     const checkIfWalkerInCity = (city) => {
-        const cityCheck = [];
-        for (const walkerCity of walker?.walkerCities) {
-            if (city.id === walkerCity.cityId) {
-                cityCheck.push(city);
-                return (
-                    <label key={city.id}><input type="checkbox" onChange={(e) => {handleDeleteWalkerCity(e)}} checked key={city.id} value={city.id}/>{city.name}</label>
-                );
+        const isWalkerInCity = walker.walkerCities.some(walkerCity => walkerCity.cityId === city.id);
+        
+        const handleCheckboxChange = (e) => {
+            const isChecked = e.target.checked
+            const cityId = parseInt(e.target.value)
+    
+            if (isChecked) {
+                postWalkerCity(cityId, walker.id).then(() => {
+                    getWalkerById(walkerId).then(setWalker)
+                })
+            } else {
+                deleteWalkerCity(cityId, walker.id).then(() => {
+                    getWalkerById(walkerId).then(setWalker)
+                })
             }
         }
-        
-        if (cityCheck.length === 0) {
-            return (
-                <label key={city.id}><input type="checkbox" onChange={(e) => {handlePostWalkerCity(e)}} key={city.id} value={city.id}/>{city.name}</label>
-            );
-        }
+    
+        return (
+            <label key={city.id}>
+                <input
+                    type="checkbox"
+                    onChange={handleCheckboxChange}
+                    checked={isWalkerInCity}
+                    value={city.id}
+                />
+                {city.name}
+            </label>
+        )
     }
 
     return(
