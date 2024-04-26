@@ -208,6 +208,24 @@ app.MapDelete("/api/dogs/{dogId}", (int dogId) =>
     dogs.Remove(dogObj);
 });
 
+app.MapDelete("/api/walkers/{walkerId}", (int walkerId) =>
+{
+    Walker walkerObj = walkers.FirstOrDefault(w => w.Id == walkerId);
+    foreach (Dog dog in dogs)
+    {
+        if (dog.WalkerId == walkerId)
+        {
+            dog.WalkerId = 0;
+            dog.Walker = new Walker
+            {
+                Id = 0,
+                Name = "Unassigned"
+            };
+        }
+    }
+    walkers.Remove(walkerObj);
+});
+
 app.MapPost("/api/cities", (City city) => {
     city.Id = cities.Max(c => c.Id) + 1;
     cities.Add(city);
